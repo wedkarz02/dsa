@@ -1,5 +1,5 @@
 pub struct Node<T: Ord + Copy> {
-    value: T,
+    pub value: T,
     left: Option<Box<Node<T>>>,
     right: Option<Box<Node<T>>>,
 }
@@ -10,6 +10,14 @@ impl<T: Ord + Copy> Node<T> {
             value,
             left: None,
             right: None,
+        }
+    }
+
+    fn min(&self) -> Option<&Node<T>> {
+        if let Some(node) = &self.left {
+            node.min()
+        } else {
+            Some(self)
         }
     }
 }
@@ -42,6 +50,10 @@ impl<T: Ord + Copy> BinaryTree<T> {
                 None => current.right = Some(Box::new(Node::new(value))),
             }
         }
+    }
+
+    pub fn min(&self) -> Option<&Node<T>> {
+        self.root.as_ref().and_then(|node| node.min())
     }
 
     pub fn get_inorder(&self) -> Vec<T> {
