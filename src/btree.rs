@@ -12,14 +12,6 @@ impl<T: Ord + Copy> Node<T> {
             right: None,
         }
     }
-
-    fn min(&self) -> Option<&Node<T>> {
-        if let Some(node) = &self.left {
-            node.min()
-        } else {
-            Some(self)
-        }
-    }
 }
 
 pub struct BinaryTree<T: Ord + Copy> {
@@ -53,7 +45,16 @@ impl<T: Ord + Copy> BinaryTree<T> {
     }
 
     pub fn min(&self) -> Option<&Node<T>> {
-        self.root.as_ref().and_then(|node| node.min())
+        self.root
+            .as_ref()
+            .and_then(|node| BinaryTree::min_rec(node))
+    }
+
+    fn min_rec(current: &Box<Node<T>>) -> Option<&Node<T>> {
+        match &current.left {
+            Some(node) => BinaryTree::min_rec(node),
+            None => Some(current),
+        }
     }
 
     pub fn get_inorder(&self) -> Vec<T> {
