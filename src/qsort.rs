@@ -16,7 +16,7 @@ fn qsort_internal<T: Ord + Copy>(values: &mut [T], start: isize, end: isize) {
 
 fn partition<T: Ord + Copy>(values: &mut [T], start: usize, end: usize) -> usize {
     let mut pivot_index = start;
-    let pivot_value = values[end].clone();
+    let pivot_value = values[end];
 
     for i in start..end {
         if values[i] < pivot_value {

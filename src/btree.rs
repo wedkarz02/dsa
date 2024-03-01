@@ -18,6 +18,12 @@ pub struct BinaryTree<T: Ord + Copy> {
     root: Option<Box<Node<T>>>,
 }
 
+impl<T: Ord + Copy> Default for BinaryTree<T> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl<T: Ord + Copy> BinaryTree<T> {
     pub fn new() -> BinaryTree<T> {
         BinaryTree { root: None }
@@ -50,7 +56,7 @@ impl<T: Ord + Copy> BinaryTree<T> {
             .and_then(|node| BinaryTree::min_rec(node))
     }
 
-    fn min_rec(current: &Box<Node<T>>) -> Option<&Node<T>> {
+    fn min_rec(current: &Node<T>) -> Option<&Node<T>> {
         match &current.left {
             Some(node) => BinaryTree::min_rec(node),
             None => Some(current),
@@ -67,7 +73,7 @@ impl<T: Ord + Copy> BinaryTree<T> {
         values
     }
 
-    fn get_inorder_rec(current: &Box<Node<T>>, values: &mut Vec<T>) {
+    fn get_inorder_rec(current: &Node<T>, values: &mut Vec<T>) {
         if let Some(node) = &current.left {
             BinaryTree::get_inorder_rec(node, values);
         }
@@ -89,7 +95,7 @@ impl<T: Ord + Copy> BinaryTree<T> {
         values
     }
 
-    fn get_postorder_rec(current: &Box<Node<T>>, values: &mut Vec<T>) {
+    fn get_postorder_rec(current: &Node<T>, values: &mut Vec<T>) {
         if let Some(node) = &current.right {
             BinaryTree::get_postorder_rec(node, values);
         }
