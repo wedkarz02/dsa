@@ -1,2 +1,2 @@
-pub mod btree;
+pub mod bst;
 pub mod qsort;

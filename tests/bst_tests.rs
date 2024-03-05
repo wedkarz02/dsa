@@ -1,6 +1,6 @@
 #[cfg(test)]
-mod btree_tests {
-    use dsa::btree::*;
+mod bst_tests {
+    use dsa::bst::*;
 
     #[test]
     fn test_inorder() {

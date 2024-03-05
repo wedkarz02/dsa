@@ -1,2 +1,2 @@
-mod btree_tests;
+mod bst_tests;
 mod qsort_tests;
