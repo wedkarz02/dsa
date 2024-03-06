@@ -16,6 +16,10 @@ impl<T: Ord + Copy> BinaryTree<T> {
         }
     }
 
+    pub fn delete(&mut self, value: &T) {
+        Node::delete(&mut self.root, value);
+    }
+
     pub fn get_inorder(&self) -> Vec<T> {
         let mut values: Vec<T> = Vec::new();
         if let Some(ref node) = self.root {
@@ -58,6 +62,31 @@ impl<T: Ord + Copy> Node<T> {
         }
     }
 
+    fn delete(root: &mut Option<Box<Node<T>>>, value: &T) {
+        if let Some(ref mut node) = root {
+            match value.cmp(&node.value) {
+                cmp::Ordering::Less => Node::delete(&mut node.left, value),
+                cmp::Ordering::Greater => Node::delete(&mut node.right, value),
+                cmp::Ordering::Equal => match (&node.left, &node.right) {
+                    (None, None) => *root = None,
+                    (Some(_), None) => *root = node.left.take(),
+                    (None, Some(_)) => *root = node.right.take(),
+                    (Some(_), Some(_)) => node.value = Node::delete_min(&mut node.right).unwrap(),
+                },
+            }
+        }
+    }
+
+    fn delete_min(root: &mut Option<Box<Node<T>>>) -> Option<T> {
+        if root.as_ref().unwrap().left.is_some() {
+            Node::delete_min(&mut root.as_mut().unwrap().left)
+        } else {
+            let node = root.take().unwrap();
+            *root = node.right;
+            Some(node.value)
+        }
+    }
+
     fn push_inorder(&self, vals: &mut Vec<T>) {
         if let Some(ref node) = self.left {
             node.push_inorder(vals);
@@ -70,113 +99,3 @@ impl<T: Ord + Copy> Node<T> {
         }
     }
 }
-
-// pub struct Node<T: Ord + Copy> {
-//     pub value: T,
-//     left: Option<Box<Node<T>>>,
-//     right: Option<Box<Node<T>>>,
-// }
-
-// impl<T: Ord + Copy> Node<T> {
-//     pub fn new(value: T) -> Node<T> {
-//         Node {
-//             value,
-//             left: None,
-//             right: None,
-//         }
-//     }
-// }
-
-// pub struct BinaryTree<T: Ord + Copy> {
-//     root: Option<Box<Node<T>>>,
-// }
-
-// impl<T: Ord + Copy> Default for BinaryTree<T> {
-//     fn default() -> Self {
-//         Self::new()
-//     }
-// }
-
-// impl<T: Ord + Copy> BinaryTree<T> {
-//     pub fn new() -> BinaryTree<T> {
-//         BinaryTree { root: None }
-//     }
-
-//     pub fn insert(&mut self, value: T) {
-//         match &mut self.root {
-//             Some(node) => BinaryTree::insert_rec(value, node),
-//             None => self.root = Some(Box::new(Node::new(value))),
-//         }
-//     }
-
-//     fn insert_rec(value: T, current: &mut Box<Node<T>>) {
-//         if value < current.value {
-//             match &mut current.left {
-//                 Some(node) => BinaryTree::insert_rec(value, node),
-//                 None => current.left = Some(Box::new(Node::new(value))),
-//             }
-//         } else {
-//             match &mut current.right {
-//                 Some(node) => BinaryTree::insert_rec(value, node),
-//                 None => current.right = Some(Box::new(Node::new(value))),
-//             }
-//         }
-//     }
-
-//     pub fn min(&self) -> Option<&Node<T>> {
-//         self.root
-//             .as_ref()
-//             .and_then(|node| BinaryTree::min_rec(node))
-//     }
-
-//     fn min_rec(current: &Node<T>) -> Option<&Node<T>> {
-//         match &current.left {
-//             Some(node) => BinaryTree::min_rec(node),
-//             None => Some(current),
-//         }
-//     }
-
-//     pub fn get_inorder(&self) -> Vec<T> {
-//         let mut values: Vec<T> = Vec::new();
-
-//         if let Some(node) = &self.root {
-//             BinaryTree::get_inorder_rec(node, &mut values);
-//         }
-
-//         values
-//     }
-
-//     fn get_inorder_rec(current: &Node<T>, values: &mut Vec<T>) {
-//         if let Some(node) = &current.left {
-//             BinaryTree::get_inorder_rec(node, values);
-//         }
-
-//         values.push(current.value);
-
-//         if let Some(node) = &current.right {
-//             BinaryTree::get_inorder_rec(node, values);
-//         }
-//     }
-
-//     pub fn get_postorder(&self) -> Vec<T> {
-//         let mut values: Vec<T> = Vec::new();
-
-//         if let Some(node) = &self.root {
-//             BinaryTree::get_postorder_rec(node, &mut values);
-//         }
-
-//         values
-//     }
-
-//     fn get_postorder_rec(current: &Node<T>, values: &mut Vec<T>) {
-//         if let Some(node) = &current.right {
-//             BinaryTree::get_postorder_rec(node, values);
-//         }
-
-//         values.push(current.value);
-
-//         if let Some(node) = &current.left {
-//             BinaryTree::get_postorder_rec(node, values);
-//         }
-//     }
-// }
