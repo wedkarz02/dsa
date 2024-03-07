@@ -4,6 +4,12 @@ pub struct BinaryTree<T: Ord + Copy> {
     root: Option<Box<Node<T>>>,
 }
 
+impl<T: Ord + Copy> Default for BinaryTree<T> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl<T: Ord + Copy> BinaryTree<T> {
     pub fn new() -> BinaryTree<T> {
         BinaryTree { root: None }
@@ -23,7 +29,7 @@ impl<T: Ord + Copy> BinaryTree<T> {
     pub fn get_inorder(&self) -> Vec<T> {
         let mut values: Vec<T> = Vec::new();
         if let Some(ref node) = self.root {
-            Node::push_inorder(&node, &mut values);
+            node.push_inorder(&mut values);
         }
         values
     }
