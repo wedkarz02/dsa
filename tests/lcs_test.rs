@@ -10,4 +10,13 @@ mod tests {
         assert_eq!("b", lcs("ab", "ba"));
         assert_eq!("baac", lcs("abbaac", "bacbacba"));
     }
+
+    #[test]
+    fn test_lcs_length() {
+        assert_eq!(1, lcs_length("a", "a"));
+        assert_eq!(0, lcs_length("", ""));
+        assert_eq!(0, lcs_length("", "a"));
+        assert_eq!(1, lcs_length("ab", "ba"));
+        assert_eq!(4, lcs_length("abbaac", "bacbacba"));
+    }
 }

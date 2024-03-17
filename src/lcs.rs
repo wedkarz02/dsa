@@ -38,3 +38,26 @@ pub fn lcs(x: &str, y: &str) -> String {
 
     String::from(str::from_utf8(&lcs).unwrap())
 }
+
+pub fn lcs_length(x: &str, y: &str) -> usize {
+    let x = x.as_bytes();
+    let y = y.as_bytes();
+    let m = x.len();
+    let n = y.len();
+
+    let mut prev_row = vec![0; n + 1];
+    let mut curr_row = vec![0; n + 1];
+
+    for i in 1..m + 1 {
+        for j in 1..n + 1 {
+            if x[i - 1] == y[j - 1] {
+                curr_row[j] = prev_row[j - 1] + 1;
+            } else {
+                curr_row[j] = cmp::max(curr_row[j - 1], prev_row[j]);
+            }
+        }
+        prev_row = curr_row.to_owned();
+    }
+
+    curr_row[n]
+}
